@@ -239,38 +239,61 @@ void loadFromFile(Pipe& t, CS& cs) {
     cout << "Data successfully loaded!\n";
 }
 
-void ShowMenu(Pipe t, CS cs)
-{
+void ShowMenu(Pipe& t, CS& cs) {
     int option;
-    while (1) {
-        cout << "\n Chooose options: \n1. Add pipe \n2. Add CS \n3. Show all objects \n4. Edit the pipe \n5. Edit the CS \n";
+    while (true) {
+        cout << "\n=== MAIN MENU ===\n";
+        cout << "1. Add Pipe\n";
+        cout << "2. Add CS\n";
+        cout << "3. View all objects\n";
+        cout << "4. Edit Pipe\n";
+        cout << "5. Edit CS\n";
+        cout << "6. Save\n";
+        cout << "7. Load\n";
+        cout << "0. Exit\n";
+        cout << "Choose option: ";
+
         cin >> option;
+
+        if (cin.fail()) {
+            cout << "Error! Enter integer from 0 to 7.\n";
+            cin.clear();
+            clearInputBuffer();
+            continue;
+        }
+
         switch (option) {
         case 1:
-            cout << "Insert pipe name pls: ";
-            cin >> t.name;
+            inputPipe(t);
             break;
         case 2:
-            cout << "Insert CS name pls: ";
-            cin >> cs.name;
+            inputCS(cs);
+            break;
         case 3:
-            cout << "\nPipe name: " << t.name;
-            cout << "\n\tLength: " << t.length;
-            cout << "\nCS name: " << cs.name;
+            showPipe(t);
+            showCS(cs);
             break;
         case 4:
-            cout << "Insert pipe diametr pls:";
-            cin >> t.diametr;
-            cout << "Insert pipe length pls:";
-            cin >> t.length;
-            cout << "Insert pipe status pls:";
-            cin >> t.status;
+            editPipe(t);
             break;
         case 5:
+            editCS(cs);
+            break;
+        case 6:
+            saveToFile(t, cs);
+            break;
+        case 7:
+            loadFromFile(t, cs);
+            break;
+        case 0:
+            cout << "Exit from programm.\n";
+            return;
+        default:
+            cout << "Wrong choice! Try again.\n";
             break;
         }
     }
-};
+}
 
 
 int main()
