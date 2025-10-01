@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include <string>
+#include <fstream>
 using namespace std;
 
 struct Pipe {
@@ -181,6 +182,61 @@ void editCS(CS& cs) {
         cout << "Wrong choice!\n";
     }
     clearInputBuffer();
+}
+
+void saveToFile(const Pipe& t, const CS& cs) {
+    ofstream file("data.txt");
+    if (!file.is_open()) {
+        cout << "Wrong open file!\n";
+        return;
+    }
+
+    file << "PIPE\n";
+    file << t.name << "\n";
+    file << t.length << "\n";
+    file << t.diametr << "\n";
+    file << t.status << "\n";
+
+    file << "CS\n";
+    file << cs.name << "\n";
+    file << cs.number_work << "\n";
+    file << cs.number_work_online << "\n";
+    file << cs.class_cs << "\n";
+
+    file.close();
+    cout << "Data successfully saved!\n";
+}
+
+void loadFromFile(Pipe& t, CS& cs) {
+    ifstream file("data.txt");
+    if (!file.is_open()) {
+        cout << "Wrong reading!\n";
+        return;
+    }
+
+    string marker;
+
+    file >> marker;
+    if (marker == "PIPE") {
+        clearInputBuffer();
+        getline(file, t.name);
+        file >> t.length;
+        file >> t.diametr;
+        file >> t.status;
+    }
+
+    file >> marker;
+    if (marker == "CS") {
+        clearInputBuffer();
+        getline(file, cs.name);
+        file >> cs.number_work;
+        file >> cs.number_work_online;
+        clearInputBuffer();
+        getline(file, cs.class_cs);
+    }
+
+    file.close();
+    cout << "Data successfully loaded!\n";
 }
 
 void ShowMenu(Pipe t, CS cs)
