@@ -112,7 +112,76 @@ void editPipe(Pipe& t) {
     cout << "Repair status update!\n";
 }
 
+void inputCS(CS& cs) {
+    cout << "=== Enter data about CS ===\n";
 
+    cout << "CS name: ";
+    clearInputBuffer();
+    getline(cin, cs.name);
+
+    cs.number_work = inputPositiveInt("Enter the total number of workshops: ");
+
+    while (true) {
+        cs.number_work_online = inputPositiveInt("Enter the number of workshops online: ");
+        if (cs.number_work_online <= cs.number_work) {
+            break;
+        }
+        cout << "Error! Online workshops >>> total workshops. "
+            << cs.number_work << ")\n";
+    }
+
+    cout << "Class of CS station: ";
+    clearInputBuffer();
+    getline(cin, cs.class_cs);
+
+    cout << "CS added successfully!\n";
+}
+
+void showCS(const CS& cs) {
+    cout << "\n=== Inf about CS ===\n";
+    cout << "Name: " << cs.name << endl;
+    cout << "Total workshops: " << cs.number_work << endl;
+    cout << "Online workshops: " << cs.number_work_online << endl;
+    cout << "Class station: " << cs.class_cs << endl;
+}
+
+void editCS(CS& cs) {
+    if (cs.name.empty()) {
+        cout << "First add the CS!\n";
+        return;
+    }
+
+    cout << "\n=== Edit CS ===\n";
+    cout << "Online workshops: " << cs.number_work_online << " of " << cs.number_work << " total\n";
+    cout << "1 - Run workshop\n";
+    cout << "2 - Stop workshop цех\n";
+
+    int choice;
+    cin >> choice;
+
+    if (choice == 1) {
+        if (cs.number_work_online < cs.number_work) {
+            cs.number_work_online++;
+            cout << "Workshop online! Online: " << cs.number_work_online << endl;
+        }
+        else {
+            cout << "Error! All workshops online.\n";
+        }
+    }
+    else if (choice == 2) {
+        if (cs.number_work_online > 0) {
+            cs.number_work_online--;
+            cout << "Workshop stoped! Online: " << cs.number_work_online << endl;
+        }
+        else {
+            cout << "Error! All workshops offline.\n";
+        }
+    }
+    else {
+        cout << "Wrong choice!\n";
+    }
+    clearInputBuffer();
+}
 
 void ShowMenu(Pipe t, CS cs)
 {
