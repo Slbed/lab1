@@ -2,6 +2,7 @@
 //
 
 #include <iostream>
+#include <string>
 using namespace std;
 
 struct Pipe {
@@ -76,6 +77,42 @@ bool inputBool(const string& prompt) {
         }
     }
 }
+
+void inputPipe(Pipe& t) {
+    cout << "=== Enter data Pipe ===\n";
+
+    cout << "Pipe name: ";
+    clearInputBuffer();
+    getline(cin, t.name);
+
+    t.length = inputPositiveFloat("Enter the length of the pipe (km): ");
+    t.diametr = inputPositiveInt("Enter the pipe diameter (mm): ");
+    t.status = inputBool("Is the pipe under repair?");
+
+    cout << "The pipe has been added successfully!\n";
+}
+
+void showPipe(const Pipe& t) {
+    cout << "\n=== Inf about Pipe ===\n";
+    cout << "Pipe name: " << t.name << endl;
+    cout << "Length: " << t.length << " km" << endl;
+    cout << "Diametr: " << t.diametr << " mm" << endl;
+    cout << "Under repair?: " << (t.status ? "Yes" : "No") << endl;
+}
+
+void editPipe(Pipe& t) {
+    if (t.name.empty()) {
+        cout << "Add the pipe first!\n";
+        return;
+    }
+
+    cout << "\n=== Edit Pipe ===\n";
+    cout << "Status: " << (t.status ? "Under repair" : "Work") << endl;
+    t.status = inputBool("Change status?");
+    cout << "Repair status update!\n";
+}
+
+
 
 void ShowMenu(Pipe t, CS cs)
 {
