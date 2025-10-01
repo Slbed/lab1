@@ -298,9 +298,11 @@ void ShowMenu(Pipe& t, CS& cs) {
 
 int main()
 {
-    cout << "Hello World!\n";
+    cout << "=== System of control truboprovodom ===\n";
     Pipe truba;
     CS comp_station;
+    truba.name = "";
+    comp_station.name = "";
     ShowMenu(truba, comp_station);
     return 1;
 }
