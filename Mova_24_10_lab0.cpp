@@ -4,6 +4,7 @@
 #include <iostream>
 #include <string>
 #include <fstream>
+#include <limits>
 using namespace std;
 
 struct Pipe {
@@ -155,7 +156,7 @@ void editCS(CS& cs) {
     cout << "\n=== Edit CS ===\n";
     cout << "Online workshops: " << cs.number_work_online << " of " << cs.number_work << " total\n";
     cout << "1 - Run workshop\n";
-    cout << "2 - Stop workshop цех\n";
+    cout << "2 - Stop workshop\n";
 
     int choice;
     cin >> choice;
