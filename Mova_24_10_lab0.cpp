@@ -27,19 +27,33 @@ void clearInputBuffer() {
 }
 
 int inputPositiveInt(const string& prompt) {
-    int value;
+    string input;
     while (true) {
         cout << prompt;
-        cin >> value;
-        if (cin.fail() || value <= 0) {
-            cout << "Error! Please put polojitelnoe chislo: ";
-            cin.clear();
-            clearInputBuffer();
+        getline(cin, input);
+        if (input.empty()) {
+            cout << "Error! Please enter a positive integer: ";
+            continue;
         }
-        else {
-            clearInputBuffer();
-            return value;
+        bool is_valid = true;
+        for (char c : input) {
+            if (!isdigit(c)) {
+                is_valid = false;
+                break;
+            }
         }
+
+        if (!is_valid) {
+            cout << "Error! Please enter a positive integer (without decimal point): ";
+            continue;
+        }
+        int value = stoi(input);
+        if (value <= 0) {
+            cout << "Error! Please enter a positive integer: ";
+            continue;
+        }
+
+        return value;
     }
 }
 
@@ -84,7 +98,6 @@ void inputPipe(Pipe& t) {
     cout << "=== Enter data Pipe ===\n";
 
     cout << "Pipe name: ";
-    clearInputBuffer();
     getline(cin, t.name);
 
     t.length = inputPositiveFloat("Enter the length of the pipe (km): ");
@@ -95,11 +108,17 @@ void inputPipe(Pipe& t) {
 }
 
 void showPipe(const Pipe& t) {
-    cout << "\n=== Inf about Pipe ===\n";
-    cout << "Pipe name: " << t.name << endl;
-    cout << "Length: " << t.length << " km" << endl;
-    cout << "Diametr: " << t.diametr << " mm" << endl;
-    cout << "Under repair?: " << (t.status ? "Yes" : "No") << endl;
+    if (t.name.empty()) {
+        cout << "\n=== Inf about Pipe ===\n";
+        cout << "No pipe information available.\n";
+    }
+    else {
+        cout << "\n=== Inf about Pipe ===\n";
+        cout << "Pipe name: " << t.name << endl;
+        cout << "Length: " << t.length << " km" << endl;
+        cout << "Diametr: " << t.diametr << " mm" << endl;
+        cout << "Under repair?: " << (t.status ? "Yes" : "No") << endl;
+    }
 }
 
 void editPipe(Pipe& t) {
@@ -118,7 +137,6 @@ void inputCS(CS& cs) {
     cout << "=== Enter data about CS ===\n";
 
     cout << "CS name: ";
-    clearInputBuffer();
     getline(cin, cs.name);
 
     cs.number_work = inputPositiveInt("Enter the total number of workshops: ");
@@ -133,18 +151,23 @@ void inputCS(CS& cs) {
     }
 
     cout << "Class of CS station: ";
-    clearInputBuffer();
     getline(cin, cs.class_cs);
 
     cout << "CS added successfully!\n";
 }
 
 void showCS(const CS& cs) {
-    cout << "\n=== Inf about CS ===\n";
-    cout << "Name: " << cs.name << endl;
-    cout << "Total workshops: " << cs.number_work << endl;
-    cout << "Online workshops: " << cs.number_work_online << endl;
-    cout << "Class station: " << cs.class_cs << endl;
+    if (cs.name.empty()) {
+        cout << "\n=== Inf about CS ===\n";
+        cout << "No CS information available.\n";
+    }
+    else {
+        cout << "\n=== Inf about CS ===\n";
+        cout << "Name: " << cs.name << endl;
+        cout << "Total workshops: " << cs.number_work << endl;
+        cout << "Online workshops: " << cs.number_work_online << endl;
+        cout << "Class station: " << cs.class_cs << endl;
+    }
 }
 
 void editCS(CS& cs) {
@@ -188,21 +211,19 @@ void editCS(CS& cs) {
 void saveToFile(const Pipe& t, const CS& cs) {
     ofstream file("data.txt");
     if (!file.is_open()) {
-        cout << "Wrong open file!\n";
+        cout << "Error opening file for writing!\n";
         return;
     }
-
-    file << "PIPE\n";
-    file << t.name << "\n";
-    file << t.length << "\n";
-    file << t.diametr << "\n";
-    file << t.status << "\n";
-
-    file << "CS\n";
-    file << cs.name << "\n";
-    file << cs.number_work << "\n";
-    file << cs.number_work_online << "\n";
-    file << cs.class_cs << "\n";
+    file << "PIPE" << endl;
+    file << t.name << endl;
+    file << t.length << endl;
+    file << t.diametr << endl;
+    file << t.status << endl;
+    file << "CS" << endl;
+    file << cs.name << endl;
+    file << cs.number_work << endl;
+    file << cs.number_work_online << endl;
+    file << cs.class_cs << endl;
 
     file.close();
     cout << "Data successfully saved!\n";
@@ -211,28 +232,29 @@ void saveToFile(const Pipe& t, const CS& cs) {
 void loadFromFile(Pipe& t, CS& cs) {
     ifstream file("data.txt");
     if (!file.is_open()) {
-        cout << "Wrong reading!\n";
+        cout << "File not found or cannot be opened!\n";
         return;
     }
 
     string marker;
 
+ 
     file >> marker;
     if (marker == "PIPE") {
-        clearInputBuffer();
+        file.ignore(); 
         getline(file, t.name);
         file >> t.length;
         file >> t.diametr;
         file >> t.status;
+        file.ignore(); 
     }
-
     file >> marker;
     if (marker == "CS") {
-        clearInputBuffer();
+        file.ignore();
         getline(file, cs.name);
         file >> cs.number_work;
         file >> cs.number_work_online;
-        clearInputBuffer();
+        file.ignore();
         getline(file, cs.class_cs);
     }
 
@@ -242,6 +264,8 @@ void loadFromFile(Pipe& t, CS& cs) {
 
 void ShowMenu(Pipe& t, CS& cs) {
     int option;
+    string input;
+
     while (true) {
         cout << "\n=== MAIN MENU ===\n";
         cout << "1. Add Pipe\n";
@@ -254,12 +278,23 @@ void ShowMenu(Pipe& t, CS& cs) {
         cout << "0. Exit\n";
         cout << "Choose option: ";
 
-        cin >> option;
+        getline(cin, input);
 
-        if (cin.fail()) {
-            cout << "Error! Enter integer from 0 to 7.\n";
-            cin.clear();
-            clearInputBuffer();
+        bool is_valid = true;
+        for (char c : input) {
+            if (!isdigit(c)) {
+                is_valid = false;
+                break;
+            }
+        }
+        if (!is_valid || input.empty()) {
+            cout << "Error! Please enter an integer from 0 to 7.\n";
+            continue;
+        }
+        option = stoi(input);
+
+        if (option < 0 || option > 7) {
+            cout << "Error! Please enter a number from 0 to 7.\n";
             continue;
         }
 
